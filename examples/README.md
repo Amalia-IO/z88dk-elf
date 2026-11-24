@@ -16,14 +16,12 @@ the project in the WSL VS Code extension host.
 From the root of a z88dk-elf checkout, copy the example to a new directory:
 
 ```sh
-mkdir "$HOME/z88dk-elf-demo"
-mkdir "$HOME/z88dk-elf-demo/.vscode"
-cp examples/Makefile examples/main.c examples/coverage.asm "$HOME/z88dk-elf-demo/"
-cp examples/launch.json examples/tasks.json "$HOME/z88dk-elf-demo/.vscode/"
+mkdir "$HOME/z88dk-elf-demo" &&
+mkdir "$HOME/z88dk-elf-demo/.vscode" &&
+cp examples/Makefile examples/main.c examples/coverage.asm "$HOME/z88dk-elf-demo/" &&
+cp examples/launch.json examples/tasks.json "$HOME/z88dk-elf-demo/.vscode/" &&
 cd "$HOME/z88dk-elf-demo"
 ```
-
-Stop if either `mkdir` fails; do not overwrite an existing project.
 
 Install the z88dk-elf package in that directory. The package is not yet
 published to npm; replace the path with the absolute path to your local tarball:
@@ -46,9 +44,9 @@ show how to supply a Docker zcc instead. The outputs are
 
 ## Debug
 
-Deploy the matching COM using your target's normal procedure. Do not copy into
-a mounted disk or an active directory export. Keep the ELF and metadata
-together on the host. Connect only one debugger to the remote stub at a time.
+Deploy the matching COM using your target's normal transfer procedure. Keep
+the ELF and metadata together on the debugger host. Connect only one debugger
+to the remote stub at a time.
 
 Start GDB with the ELF, then load the support files:
 
@@ -68,10 +66,11 @@ Launch `PROGRAM.COM` on CP/M. After the entry breakpoint, try `break recurse`,
 `continue`, `bt`, `info locals` and `finish`; `leaf`, `invoke` and
 `assembly_value` provide further C and assembly examples.
 
-For VS Code, install CDT GDB in the Linux/WSL extension host, open this demo
-directory there, and select **z88dk ELF: attach (Linux/WSL)**. For the first
-manual build, remove `preLaunchTask` from `.vscode/launch.json`; otherwise the
-included task builds with its default native tools. Close the GDB CLI session
-before attaching in VS Code. See the
+For VS Code, install CDT GDB extension **3.0.0 or later** in the Linux/WSL
+extension host, open this demo directory there, and select
+**z88dk ELF: attach (Linux/WSL)**. For the first manual build, remove
+`preLaunchTask` from `.vscode/launch.json`; otherwise the included task builds
+with its default native tools. Close the GDB CLI session before attaching in VS
+Code. See the
 [VS Code quick start](../README.md#quick-start-2-debug-the-same-elf-in-vs-code-optional)
 for setup and build-task overrides.
