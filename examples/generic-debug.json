@@ -1,0 +1,9 @@
+{
+  "compiler": "sdcc",
+  "toolchain": "native",
+  "sources": ["main.c", "coverage.asm"],
+  "output": "program",
+  "zccArgs": [],
+  "codeSections": ["code_user"],
+  "pathMappings": []
+}

@@ -1,0 +1,45 @@
+name: Test
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  core:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22, 24]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+      - run: npm pack --dry-run
+  integration:
+    runs-on: ubuntu-latest
+    env:
+      Z88DK_DOCKER_IMAGE: z88dk/z88dk@sha256:bb1569b1ae7604086168c32c1cf73d758ea410c2dcf4efdf029859b38246d1f5
+      Z80_GDB: /tmp/z80-gdb/bin/z80-unknown-elf-gdb
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build pinned upstream Python-enabled Z80 GDB
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y build-essential python3-dev libexpat1-dev libgmp-dev libmpfr-dev texinfo bison flex
+          mkdir -p /tmp/gdb-source /tmp/gdb-build
+          git -C /tmp/gdb-source init
+          git -C /tmp/gdb-source remote add origin https://sourceware.org/git/binutils-gdb.git
+          git -C /tmp/gdb-source fetch --depth 1 origin e522ebecf7381e1e03548a7d0816b8ce3c038984
+          git -C /tmp/gdb-source checkout --detach FETCH_HEAD
+          cd /tmp/gdb-build
+          /tmp/gdb-source/configure --target=z80-unknown-elf --prefix=/tmp/z80-gdb --with-python=python3 --with-expat --disable-werror --disable-sim --disable-nls
+          make -j2 all-gdb
+          make install-gdb
+      - name: Mandatory compiler, GDB, Make and installed-package tests
+        run: npm run test:integration

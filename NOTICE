@@ -1,0 +1,9 @@
+z88dk-elf was born from the converter, compiler adapters, stack/location analysis, 
+guarded unwinder and regression fixtures developed to support VSCode debugging 
+under the z80 supported version of gdb. The intended target being z88dk compiled
+C and mixed assembly Amstrad PCW CP/M programs running with the Amalia-IO gdb stub.
+
+External toolchains, GDB, Node.js and the CDT extension are separate projects, 
+not redistributed by this package, and retain their respective licenses.
+
+This project is not an official z88dk, GNU GDB or Eclipse CDT release.

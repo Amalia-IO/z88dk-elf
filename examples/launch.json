@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "gdbtarget",
+      "request": "attach",
+      "name": "z88dk ELF: attach (Linux/WSL)",
+      "gdb": "${input:z80Gdb}",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/build/program.debug.elf",
+      "preLaunchTask": "Build debug ELF",
+      "target": {
+        "type": "remote",
+        "host": "${input:stubHost}",
+        "port": "${input:stubPort}"
+      },
+      "run": "preserve",
+      "gdbAsync": true,
+      "gdbNonStop": false,
+      "auxiliaryGdb": false,
+      "preConnectCommands": [
+        "source node_modules/z88dk-elf/gdb/setup.gdb",
+        "source node_modules/z88dk-elf/gdb/z80-generic-unwinder.py"
+      ],
+      "verbose": true,
+      "logFile": "${workspaceFolder}/build/cdt-mi.log"
+    }
+  ],
+  "inputs": [
+    { "id": "z80Gdb", "type": "promptString", "description": "Python-enabled Z80 GDB executable", "default": "z80-unknown-elf-gdb" },
+    { "id": "stubHost", "type": "promptString", "description": "Remote GDB stub host" },
+    { "id": "stubPort", "type": "promptString", "description": "Remote GDB stub port", "default": "1234" }
+  ]
+}
